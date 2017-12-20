@@ -1,4 +1,4 @@
-# myAdmin-template
+# myAdmin
 
 > 基于[vueAdmin-template](https://github.com/PanJiaChen/vueAdmin-template/tree/permission-control)
 
