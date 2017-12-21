@@ -35,6 +35,7 @@ const user = {
           commit('SET_TOKEN', data.token)
           resolve()
         }).catch(error => {
+          console.log('login store error')
           reject(error)
         })
       })

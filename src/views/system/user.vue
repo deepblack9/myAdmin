@@ -1,11 +1,12 @@
 <template>
   <div class="app-container calendar-list-container">
-    <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="手机号" v-model="listQuery.title">
+    <!-- <div class="filter-container"> -->
+    <el-form class="small-space" ref="userQueryForm" :model="listQuery" size="mini" style='margin-bottom:20px;'>
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="手机号" v-model="listQuery.phone">
       </el-input>
 
-      <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.importance" placeholder="状态">
-        <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item">
+      <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.status" placeholder="状态">
+        <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value">
         </el-option>
       </el-select>
 
@@ -24,7 +25,8 @@
       <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
       <!-- <el-button class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button> -->
       <!-- <el-checkbox class="filter-item" style='margin-left:15px;' @change='tableKey=tableKey+1' v-model="showAuditor">显示审核人</el-checkbox> -->
-    </div>
+    <!-- </div> -->
+    </el-form>
 
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="拼命加载中" border fit highlight-current-row style="width: 100%">
 
@@ -77,7 +79,7 @@
         </template>
       </el-table-column>
 
-      <el-table-column width="180px" align="center" label="创建时间">
+<!--       <el-table-column width="160px" align="center" label="创建时间">
         <template slot-scope="scope">
           <span>{{scope.row.createtime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
@@ -87,9 +89,9 @@
         <template slot-scope="scope">
           <span>{{scope.row.createuser}}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
 
-      <el-table-column width="180px" align="center" label="修改时间">
+      <el-table-column width="160px" align="center" label="修改时间">
         <template slot-scope="scope">
           <span>{{scope.row.createtime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
         </template>
@@ -101,8 +103,11 @@
         </template>
       </el-table-column>
 
-      <el-table-column align="center" label="操作" min-width="150">
+      <el-table-column align="center" label="操作" min-width="200">
         <template slot-scope="scope">
+          <el-button v-if="scope.row.status!='published'" size="small" type="warning" @click="handleRole(scope.row)">角色
+          </el-button>
+
           <el-button v-if="scope.row.status!='published'" size="small" type="success" @click="handleUpdate(scope.row)">修改
           </el-button>
           <!-- <el-button v-if="scope.row.status!='draft'" size="small" @click="handleModifyStatus(scope.row,'draft')">草稿</el-button> -->
@@ -119,7 +124,7 @@
     </div>
 
     <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogFormVisible" width="500px">
-      <el-form class="small-space" ref="userForm" :model="temp" :rules="rules" label-position="left" size="mini" label-width="70px" style='width: 400px; margin-left:20px;'>
+      <el-form class="small-space" ref="userForm" :model="temp" :rules="rules" label-position="left" label-width="70px" style='width: 400px; margin-left:20px;'>
         <el-form-item label="手机号" prop="phone">
           <el-input v-model="temp.phone"></el-input>
         </el-form-item>
@@ -154,6 +159,19 @@
       </div>
     </el-dialog>
 
+    <el-dialog :title="textMap[dialogStatus]" :visible.sync="dialogRoleVisible" width="500px">
+      <div class="components-container">
+        <div class="editor-container">
+          <dnd-list :list1="curRoleList" :list2="allRoleList" list1Title="已有角色" list2Title="可选角色" v-loading="listLoading"></dnd-list>
+        </div>
+      </div>
+
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogRoleVisible = false">取 消</el-button>
+        <el-button @click="saveRole()">确 定</el-button>
+      </div>
+    </el-dialog>
+
     <!-- <el-dialog title="阅读数统计" :visible.sync="dialogPvVisible">
       <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
         <el-table-column prop="key" label="渠道"> </el-table-column>
@@ -168,10 +186,12 @@
 </template>
 
 <script>
-// import { fetchList, fetchPv } from '@/api/article'
-import { fetchList } from '@/api/user'
+// import { userList, fetchPv } from '@/api/article'
+import { userList } from '@/api/user'
+import { roleList } from '@/api/role'
 // import waves from '@/directive/waves/index.js' // 水波纹指令
 import { parseTime } from '@/utils'
+import DndList from '@/components/DndList'
 
 const calendarTypeOptions = [
   { key: 'CN', display_name: '中国' },
@@ -187,22 +207,33 @@ const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
 }, {})
 
 export default {
-  // name: 'complexTable',
+  name: 'sysUser',
   // directives: {
   //   waves
   // },
+  components: { DndList },
+  computed: {
+    filterList2() {
+      return this.list2.filter(v => {
+        if (this.isNotInList1(v)) {
+          return v
+        }
+        return false
+      })
+    }
+  },
   data() {
     return {
       list: null,
+      allRoleList: [],
+      curRoleList: [],
       total: null,
       listLoading: true,
       listQuery: {
         page: 1,
         limit: 20,
-        importance: undefined,
-        title: undefined,
-        type: undefined,
-        sort: '+id'
+        status: undefined,
+        phone: undefined
       },
       temp: {
         uid: undefined,
@@ -238,7 +269,7 @@ export default {
           { required: true, message: '请选择状态', trigger: 'change' }
         ]
       },
-      importanceOptions: [1, 2, 3],
+      // importanceOptions: [1, 2, 3],
       calendarTypeOptions,
       // sortOptions: [{ label: '按ID升序列', key: '+id' }, { label: '按ID降序', key: '-id' }],
       // statusOptions: ['enable', 'disable'],
@@ -249,11 +280,13 @@ export default {
         value: 'disable',
         label: '停用'
       }],
+      dialogRoleVisible: false,
       dialogFormVisible: false,
       dialogStatus: '',
       textMap: {
         update: '编辑',
-        create: '添加'
+        create: '添加',
+        role: '角色'
       },
       dialogPvVisible: false,
       pvData: [],
@@ -285,15 +318,28 @@ export default {
   },
   created() {
     this.getList()
+    this.getRoleList()
   },
   methods: {
     getList() {
       this.listLoading = true
-      fetchList(this.listQuery).then(response => {
-        this.list = response.data.items
-        this.total = response.data.total
+      userList(this.listQuery).then(response => {
+        this.list = response.data.data.items
+        this.total = response.data.data.total
         this.listLoading = false
       })
+    },
+    getRoleList() {
+      if (this.allRoleList.length === 0) {
+        this.listLoading = true
+        roleList(this.listQuery).then(response => {
+          var tempList = response.data.data.items
+          for (var index in tempList) {
+            this.allRoleList.push({ 'key': tempList[index].rid, 'label': tempList[index].rolename })
+          }
+          this.listLoading = false
+        })
+      }
     },
     handleFilter() {
       this.listQuery.page = 1
@@ -322,6 +368,10 @@ export default {
         type: 'success'
       })
       row.status = status
+    },
+    handleRole() {
+      this.dialogStatus = 'role'
+      this.dialogRoleVisible = true
     },
     handleCreate() {
       this.resetTemp()

@@ -1,6 +1,6 @@
 import request from '@/utils/request'
 
-export function fetchList(query) {
+export function roleList(query) {
   return request({
     url: '/sysRole',
     method: 'get'
