@@ -35,6 +35,32 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/budget',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Budget',
+        component: _import('budget/index'),
+        meta: { title: '预算管理', icon: 'form' }
+      }
+    ]
+  },
+
+  {
+    path: '/quota',
+    component: Layout,
+    children: [
+      {
+        path: 'index',
+        name: 'Quota',
+        component: _import('quota/index'),
+        meta: { title: '定额管理', icon: 'form' }
+      }
+    ]
+  },
+
+  {
     path: '/system',
     component: Layout,
     // redirect: '/system/user',

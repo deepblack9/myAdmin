@@ -6,7 +6,7 @@
         <div class="list-complete-item" v-for="element in list1" :key='element.key'>
           <div class="list-complete-item-handle">{{element.label}}</div>
           <div style="position:absolute;right:0px;">
-            <span style="float: right ;margin-top: -20px;margin-right:5px;" @click="deleteEle(element)">
+            <span style="float: right ;margin-top: -23px;margin-right:5px;" @click="deleteEle(element)">
               <i style="color:#ff4949" class="el-icon-delete"></i>
             </span>
           </div>
@@ -100,7 +100,7 @@ export default {
 <style rel="stylesheet/scss" lang="scss" scoped>
 .dndList {
   background: #fff;
-  padding-bottom: 40px;
+  padding-bottom: 5px;
   &:after {
     content: "";
     display: table;
@@ -108,14 +108,15 @@ export default {
   }
   .dndList-list {
     float: left;
-    padding-bottom: 30px;
+    padding-bottom: 5px;
     &:first-of-type {
       margin-right: 2%;
     }
     .dragArea {
-      margin-top: 15px;
+      scroll: auto;
+      margin-top: 5px;
       min-height: 50px;
-      padding-bottom: 30px;
+      padding-bottom: 5px;
     }
   }
 }
@@ -124,7 +125,7 @@ export default {
   cursor: pointer;
   position: relative;
   font-size: 14px;
-  padding: 5px 12px;
+  padding: 0px 12px;
   margin-top: 4px;
   border: 1px solid #bfcbd9;
   transition: all 1s;
