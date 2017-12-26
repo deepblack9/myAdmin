@@ -1,4 +1,8 @@
 const getters = {
+  clientWidth: state => state.app.clientWidth,
+  clientHeight: state => state.app.clientHeight,
+  mainWidth: state => 0,
+  mainHeight: state => state.app.clientHeight - 86,
   sidebar: state => state.app.sidebar,
   language: state => state.app.language,
   visitedViews: state => state.tagsView.visitedViews,

@@ -28,7 +28,7 @@
     <!-- </div> -->
     </el-form>
 
-    <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="拼命加载中" border fit highlight-current-row style="width: 100%; height: 100%;">
+    <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="拼命加载中" border fit highlight-current-row style="width: 100%;" :style="{ height: tableHeight }">
 
       <el-table-column align="center" label='序号' width="60">
         <template slot-scope="scope">
@@ -117,7 +117,7 @@
       </el-table-column>
     </el-table>
 
-    <div v-show="!listLoading" class="pagination-container">
+    <div ref="pagination" v-show="!listLoading" class="pagination-container">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="listQuery.page"
         :page-sizes="[10,20,30, 50]" :page-size="listQuery.limit" layout="total, sizes, prev, pager, next, jumper" :total="total">
       </el-pagination>
@@ -213,6 +213,12 @@ export default {
   // },
   components: { DndList },
   computed: {
+    tableHeight() {
+      // console.log(this.$refs['filterForm'])
+      console.log(this.$refs['userForm'])
+      // - this.$refs['filterForm'].style.offsetHeight - this.$refs['pagination'].style.offsetHeight
+      return this.$store.getters.mainHeight
+    },
     filterList2() {
       return this.list2.filter(v => {
         if (this.isNotInList1(v)) {

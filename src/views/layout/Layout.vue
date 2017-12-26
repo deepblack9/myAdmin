@@ -2,10 +2,10 @@
   <div class="app-wrapper" :class="{hideSidebar:!sidebar.opened}">
     <sidebar class="sidebar-container"></sidebar>
     <div class="main-container">
-      <sticky>
+      <div ref="head">
         <navbar></navbar>
         <tags-view></tags-view>
-      </sticky>
+      </div>
       <app-main></app-main>
     </div>
   </div>
@@ -37,6 +37,7 @@ export default {
 .app-wrapper {
   @include clearfix;
   position: relative;
+  scroll-y: none;
   height: 100%;
   width: 100%;
 }

@@ -42,7 +42,7 @@ export const constantRouterMap = [
         path: 'index',
         name: 'Budget',
         component: _import('budget/index'),
-        meta: { title: '预算管理', icon: 'form' }
+        meta: { title: 'splitpane1', icon: 'form' }
       }
     ]
   },
@@ -55,7 +55,7 @@ export const constantRouterMap = [
         path: 'index',
         name: 'Quota',
         component: _import('quota/index'),
-        meta: { title: '定额管理', icon: 'form' }
+        meta: { title: 'splitpane2', icon: 'form' }
       }
     ]
   },

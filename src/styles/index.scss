@@ -11,6 +11,10 @@ body {
   font-family: Helvetica Neue, Helvetica, PingFang SC, Hiragino Sans GB, Microsoft YaHei, Arial, sans-serif;
 }
 
+body {
+  overflow: hidden;
+}
+
 html {
   box-sizing: border-box;
 }
@@ -51,7 +55,9 @@ a:hover {
 
 //main-container全局样式
 .app-main{
-  min-height: 100%
+  overflow-x: hidden;
+  overflow-y: auto;
+  min-height: 100%;
 }
 
 .app-container {

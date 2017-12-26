@@ -2,6 +2,8 @@ import Cookies from 'js-cookie'
 
 const app = {
   state: {
+    clientWidth: 0,
+    clientHeight: 0,
     sidebar: {
       opened: !+Cookies.get('sidebarStatus')
     }
@@ -17,6 +19,10 @@ const app = {
     }
   },
   actions: {
+    updateClientSize: ({ commit, state }, size) => {
+      state.clientWidth = size.clientWidth
+      state.clientHeight = size.clientHeight
+    },
     ToggleSideBar: ({ commit }) => {
       commit('TOGGLE_SIDEBAR')
     }
