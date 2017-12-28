@@ -12,10 +12,12 @@ body {
 }
 
 body {
+  height: 100%;
   overflow: hidden;
 }
 
 html {
+  height: 100%;
   box-sizing: border-box;
 }
 
@@ -61,5 +63,6 @@ a:hover {
 }
 
 .app-container {
-  padding: 20px;
+  padding: 10px;
+  min-height: 100%;
 }

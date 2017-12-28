@@ -2,7 +2,7 @@
   <div class="app-container calendar-list-container">
     <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="拼命加载中" border fit highlight-current-row style="width: 100%;" :style="{ height: tableHeight }">
 
-      <el-table-column align="center" label='参数编码' width="60">
+      <!-- <el-table-column align="center" label='参数编码' width="60">
         <template slot-scope="scope">
           <span>{{scope.$index}}</span>
         </template>
@@ -30,7 +30,7 @@
         <template slot-scope="scope">
           <span>{{scope.row.idcard}}</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <!-- <el-form class="small-space" ref="userForm" :model="temp" :rules="rules" label-position="left" label-width="70px" style='width: 400px; margin-left:20px;'>
       <el-form-item label="手机号" prop="phone">
@@ -69,25 +69,8 @@
 </template>
 
 <script>
-// import { userList, fetchPv } from '@/api/article'
 import { userList } from '@/api/user'
-import { roleList } from '@/api/role'
-// import waves from '@/directive/waves/index.js' // 水波纹指令
-import { parseTime } from '@/utils'
 import DndList from '@/components/DndList'
-
-const calendarTypeOptions = [
-  { key: 'CN', display_name: '中国' },
-  { key: 'US', display_name: '美国' },
-  { key: 'JP', display_name: '日本' },
-  { key: 'EU', display_name: '欧元区' }
-]
-
-// arr to obj
-const calendarTypeKeyValue = calendarTypeOptions.reduce((acc, cur) => {
-  acc[cur.key] = cur.display_name
-  return acc
-}, {})
 
 export default {
   name: 'sysUser',
@@ -97,9 +80,6 @@ export default {
   components: { DndList },
   computed: {
     tableHeight() {
-      // console.log(this.$refs['filterForm'])
-      console.log(this.$refs['userForm'])
-      // - this.$refs['filterForm'].style.offsetHeight - this.$refs['pagination'].style.offsetHeight
       return this.$store.getters.mainHeight
     },
     filterList2() {

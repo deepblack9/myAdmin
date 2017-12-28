@@ -1,10 +1,10 @@
 <template>
   <div class="app-container calendar-list-container">
-    <div class="filter-container">
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="角色名" v-model="listQuery.title">
+    <el-form class="small-space" ref="userQueryForm" :model="listQuery" size="mini" style="margin-bottom:2px">
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" size="mini" class="filter-item" placeholder="角色名" v-model="listQuery.title">
       </el-input>
 
-      <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.importance" placeholder="状态">
+      <el-select clearable style="width: 90px" size="mini" class="filter-item" v-model="listQuery.importance" placeholder="状态">
         <el-option v-for="item in importanceOptions" :key="item" :label="item" :value="item">
         </el-option>
       </el-select>
@@ -19,14 +19,14 @@
         </el-option>
       </el-select> -->
 
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
+      <el-button class="filter-item" type="primary" size="mini" icon="el-icon-search" @click="handleFilter">搜索</el-button>
       <!-- <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button> -->
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
+      <el-button class="filter-item" style="margin-left: 10px;" size="mini" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
       <!-- <el-button class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button> -->
       <!-- <el-checkbox class="filter-item" style='margin-left:15px;' @change='tableKey=tableKey+1' v-model="showAuditor">显示审核人</el-checkbox> -->
-    </div>
+    </el-form>
 
-    <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="拼命加载中" border fit highlight-current-row style="width: 100%">
+    <el-table :key='tableKey' :data="list"  :height="this.$store.getters.tableHeight" size="mini" v-loading="listLoading" element-loading-text="拼命加载中" border fit highlight-current-row style="width: 100%">
 
       <el-table-column align="center" label='序号' width="60">
         <template slot-scope="scope">
@@ -78,10 +78,9 @@
 
       <el-table-column align="center" label="操作" min-width="150">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.status!='published'" size="small" type="success" @click="handleUpdate(scope.row)">修改
+          <el-button v-if="scope.row.status!='published'" size="mini" type="success" @click="handleUpdate(scope.row)">修改
           </el-button>
-          <!-- <el-button v-if="scope.row.status!='draft'" size="small" @click="handleModifyStatus(scope.row,'draft')">草稿</el-button> -->
-          <el-button v-if="scope.row.status!='deleted'" size="small" type="danger" @click="handleDelete(scope.row)">删除
+          <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleDelete(scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -207,6 +206,11 @@ export default {
       pvData: [],
       showAuditor: false,
       tableKey: 0
+    }
+  },
+  computed: {
+    tableHeight() {
+      return this.$store.getters.mainHeight - 133
     }
   },
   filters: {

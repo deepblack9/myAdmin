@@ -126,7 +126,7 @@ export default {
   },
   methods: {
     handleNodeClick(obj, node, el) {
-      console.log("handleNodeClick")
+      console.log('handleNodeClick')
     },
     handleClickTop(tab, event) {
       console.log(tab, event)

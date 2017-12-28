@@ -1,46 +1,25 @@
 <template>
-  <div class="app-container calendar-list-container">
-    <!-- <div class="filter-container"> -->
-    <el-form class="small-space" ref="userQueryForm" :model="listQuery" size="mini" style='margin-bottom:20px;'>
-      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" class="filter-item" placeholder="手机号" v-model="listQuery.phone">
+  <div class="app-container">
+    <el-form class="small-space" ref="userQueryForm" :model="listQuery" size="mini" style="margin-bottom:2px">
+      <el-input @keyup.enter.native="handleFilter" style="width: 200px;" size="mini" class="filter-item" placeholder="手机号" v-model="listQuery.phone">
       </el-input>
 
-      <el-select clearable style="width: 90px" class="filter-item" v-model="listQuery.status" placeholder="状态">
+      <el-select clearable style="width: 90px" size="mini" class="filter-item" v-model="listQuery.status" placeholder="状态">
         <el-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value">
         </el-option>
       </el-select>
 
-<!--       <el-select clearable class="filter-item" style="width: 130px" v-model="listQuery.type" placeholder="类型">
-        <el-option v-for="item in  calendarTypeOptions" :key="item.key" :label="item.display_name+'('+item.key+')'" :value="item.key">
-        </el-option>
-      </el-select>
-
-      <el-select @change='handleFilter' style="width: 120px" class="filter-item" v-model="listQuery.sort" placeholder="排序">
-        <el-option v-for="item in sortOptions" :key="item.key" :label="item.label" :value="item.key">
-        </el-option>
-      </el-select> -->
-
-      <el-button class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
-      <!-- <el-button class="filter-item" type="primary" v-waves icon="el-icon-search" @click="handleFilter">搜索</el-button> -->
-      <el-button class="filter-item" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
-      <!-- <el-button class="filter-item" type="primary" icon="el-icon-download" @click="handleDownload">导出</el-button> -->
-      <!-- <el-checkbox class="filter-item" style='margin-left:15px;' @change='tableKey=tableKey+1' v-model="showAuditor">显示审核人</el-checkbox> -->
-    <!-- </div> -->
+      <el-button class="filter-item" size="mini" type="primary" icon="el-icon-search" @click="handleFilter">搜索</el-button>
+      <el-button class="filter-item" size="mini" style="margin-left: 10px;" @click="handleCreate" type="primary" icon="el-icon-edit">添加</el-button>
     </el-form>
 
-    <el-table :key='tableKey' :data="list" v-loading="listLoading" element-loading-text="拼命加载中" border fit highlight-current-row style="width: 100%;" :style="{ height: tableHeight }">
+    <el-table :key='tableKey' :data='list' :height="this.$store.getters.tableHeight" size="mini" v-loading="listLoading" element-loading-text="拼命加载中" border fit highlight-current-row style="width: 100%;">
 
       <el-table-column align="center" label='序号' width="60">
         <template slot-scope="scope">
           <span>{{scope.$index}}</span>
         </template>
       </el-table-column>
-
-<!--       <el-table-column align="center" label="ID" width="65">
-        <template slot-scope="scope">
-          <span>{{scope.row.uid}}</span>
-        </template>
-      </el-table-column> -->
 
       <el-table-column align="center" label="手机号" width="110px">
         <template slot-scope="scope">
@@ -74,22 +53,9 @@
 
       <el-table-column class-name="status-col" label="状态" width="70">
         <template slot-scope="scope">
-          <!-- <el-tag :type="scope.row.statuscode | statusFilter">{{statusLabelFilter(scope.row.statusname)}}</el-tag> -->
-          <el-tag :type="scope.row.statuscode | statusFilter">{{scope.row.statuscode | statusLabelFilter}}</el-tag>
+          <el-tag size="mini" :type="scope.row.statuscode | statusFilter">{{scope.row.statuscode | statusLabelFilter}}</el-tag>
         </template>
       </el-table-column>
-
-<!--       <el-table-column width="160px" align="center" label="创建时间">
-        <template slot-scope="scope">
-          <span>{{scope.row.createtime | parseTime('{y}-{m}-{d} {h}:{i}')}}</span>
-        </template>
-      </el-table-column>
-
-      <el-table-column width="160px" align="center" label="创建人">
-        <template slot-scope="scope">
-          <span>{{scope.row.createuser}}</span>
-        </template>
-      </el-table-column> -->
 
       <el-table-column width="160px" align="center" label="修改时间">
         <template slot-scope="scope">
@@ -105,13 +71,12 @@
 
       <el-table-column align="center" label="操作" min-width="200">
         <template slot-scope="scope">
-          <el-button v-if="scope.row.status!='published'" size="small" type="warning" @click="handleRole(scope.row)">角色
+          <el-button v-if="scope.row.status!='published'" size="mini" type="warning" @click="handleRole(scope.row)">角色
           </el-button>
 
-          <el-button v-if="scope.row.status!='published'" size="small" type="success" @click="handleUpdate(scope.row)">修改
+          <el-button v-if="scope.row.status!='published'" size="mini" type="success" @click="handleUpdate(scope.row)">修改
           </el-button>
-          <!-- <el-button v-if="scope.row.status!='draft'" size="small" @click="handleModifyStatus(scope.row,'draft')">草稿</el-button> -->
-          <el-button v-if="scope.row.status!='deleted'" size="small" type="danger" @click="handleDelete(scope.row)">删除
+          <el-button v-if="scope.row.status!='deleted'" size="mini" type="danger" @click="handleDelete(scope.row)">删除
           </el-button>
         </template>
       </el-table-column>
@@ -171,17 +136,6 @@
         <el-button @click="saveRole()">确 定</el-button>
       </div>
     </el-dialog>
-
-    <!-- <el-dialog title="阅读数统计" :visible.sync="dialogPvVisible">
-      <el-table :data="pvData" border fit highlight-current-row style="width: 100%">
-        <el-table-column prop="key" label="渠道"> </el-table-column>
-        <el-table-column prop="pv" label="pv"> </el-table-column>
-      </el-table>
-      <span slot="footer" class="dialog-footer">
-        <el-button type="primary" @click="dialogPvVisible = false">确 定</el-button>
-      </span>
-    </el-dialog> -->
-
   </div>
 </template>
 
@@ -212,22 +166,6 @@ export default {
   //   waves
   // },
   components: { DndList },
-  computed: {
-    tableHeight() {
-      // console.log(this.$refs['filterForm'])
-      console.log(this.$refs['userForm'])
-      // - this.$refs['filterForm'].style.offsetHeight - this.$refs['pagination'].style.offsetHeight
-      return this.$store.getters.mainHeight
-    },
-    filterList2() {
-      return this.list2.filter(v => {
-        if (this.isNotInList1(v)) {
-          return v
-        }
-        return false
-      })
-    }
-  },
   data() {
     return {
       list: null,
@@ -298,6 +236,16 @@ export default {
       pvData: [],
       showAuditor: false,
       tableKey: 0
+    }
+  },
+  computed: {
+    filterList2() {
+      return this.list2.filter(v => {
+        if (this.isNotInList1(v)) {
+          return v
+        }
+        return false
+      })
     }
   },
   filters: {

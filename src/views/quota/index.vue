@@ -46,7 +46,7 @@ export default {
   },
   methods: {
     handleClickTop(tab, event) {
-      console.log(tab, event)
+      // console.log(tab, event)
     },
     fetchData() {
       // this.listLoading = true

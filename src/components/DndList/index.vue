@@ -33,7 +33,7 @@ export default {
   computed: {
     filterList2() {
       return this.list2.filter(v => {
-        console.log(v)
+        // console.log(v)
         if (this.isNotInList1(v)) {
           return v
         }
